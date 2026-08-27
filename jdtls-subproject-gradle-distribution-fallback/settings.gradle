@@ -1,0 +1,2 @@
+rootProject.name = 'jdtls-subproject-gradle-distribution-fallback'
+include 'lib'

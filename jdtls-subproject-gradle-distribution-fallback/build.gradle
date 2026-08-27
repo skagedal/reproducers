@@ -1,0 +1,2 @@
+// Root project: intentionally empty. The point of the reproducer is the
+// subproject, not what the root builds.

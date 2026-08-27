@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+// A generated source directory, registered unconditionally — the same shape as
+// protobuf-gradle-plugin's `build/generated/sources/proto/<sourceSet>/java`.
+// Whether it actually exists on disk depends on whether the generating task had
+// anything to do.
+def generatedSources = layout.buildDirectory.dir('generated/sources/example/java')
+
+sourceSets.main.java.srcDir generatedSources
+
+tasks.register('generateSources') {
+    outputs.dir generatedSources
+    doLast {
+        generatedSources.get().asFile.mkdirs()
+    }
+}
