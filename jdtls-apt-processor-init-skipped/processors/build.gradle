@@ -1,0 +1,26 @@
+plugins { id 'java' }
+java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
+
+// The two processors ship in separate jars, because it is the order of the
+// *jars* on the annotation processor path that jdtls fails to preserve.
+tasks.register('holderJar', Jar) {
+    archiveBaseName = 'holder'
+    from(sourceSets.main.output) { include 'demo/proc/OptionsHolder*' }
+    from('services/holder') { into 'META-INF/services' }
+}
+tasks.register('claimerJar', Jar) {
+    archiveBaseName = 'claimer'
+    from(sourceSets.main.output) { include 'demo/proc/ThingProcessor*' }
+    from('services/claimer') { into 'META-INF/services' }
+}
+
+// Filler jars carry no processors. They exist only so the path is long enough
+// that a rehash is guaranteed to reorder it — with two entries a HashSet might
+// happen to come out in the right order.
+def fillers = (1..6).collect { n ->
+    tasks.register("filler${n}Jar", Jar) { archiveBaseName = "filler${n}" }
+}
+
+tasks.register('allJars') {
+    dependsOn 'holderJar', 'claimerJar', fillers
+}

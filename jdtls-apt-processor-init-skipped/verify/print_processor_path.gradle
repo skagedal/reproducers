@@ -1,0 +1,12 @@
+// Prints the annotation processor path in the order javac receives it, which is
+// also the order the Gradle model hands to jdtls.
+gradle.allprojects { p ->
+    p.afterEvaluate {
+        def compile = p.tasks.findByName('compileJava')
+        if (compile != null) {
+            p.tasks.register('printProcessorPath') {
+                doLast { compile.options.annotationProcessorPath?.each { println it.name } }
+            }
+        }
+    }
+}

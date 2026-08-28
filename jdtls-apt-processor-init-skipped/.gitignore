@@ -1,0 +1,5 @@
+verify/__pycache__/
+.gradle/
+build/
+*/build/
+verify/ws*/

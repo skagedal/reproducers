@@ -62,6 +62,19 @@ Three further facts, each verified rather than assumed:
 - **It is the transition, not the value.** A fresh import with `automatic` set
   from the very first `initialize` is clean — `lib` still delegates to the root.
   Only a change of the setting while a workspace is open triggers it.
+- **For some clients the transition happens on every startup.** That makes the
+  point above much less reassuring than it sounds. A client can deliver its
+  settings either in `initializationOptions` on `initialize` — as this harness
+  does, which is why phase 1 is clean — or afterwards via
+  `workspace/didChangeConfiguration`. Zed does the latter for
+  `lsp.<server>.settings`, so jdtls starts every session at the default
+  `interactive` and is moved to `automatic` a moment later. That is a genuine
+  transition, so the listener fires on each launch, and clearing the workspace
+  buys exactly one good session. Observed on a real four-subproject build: the
+  fresh import at 14:48 wrote no subproject prefs at all (correctly delegating
+  to the root), and a restart at 15:04:52 wrote
+  `connection.gradle.distribution=GRADLE_DISTRIBUTION(VERSION(8.9))` for both
+  subprojects at 15:05:04, with no setting having been edited in between.
 - **Either direction breaks it.** `automatic` → `interactive` poisons `lib` just
   as `interactive` → `automatic` does, as the `Objects.equals` comparison
   implies. Verified, not inferred.
@@ -230,9 +243,21 @@ own, on the bundled Gradle".
 
 Three things that may save you time:
 
-- **Only changing the setting triggers it.** Opening the project with
-  `automatic` already set is clean. That is probably why this has gone
-  unnoticed since it was introduced.
+- **Only changing the setting triggers it — but for some clients that is every
+  startup.** Opening the project with `automatic` already set in
+  `initializationOptions` is clean. However, a client is free to deliver its
+  settings *after* `initialize` instead, via `workspace/didChangeConfiguration`,
+  and Zed does exactly that for `lsp.<server>.settings`. jdtls then starts each
+  session at the default `interactive` and is moved to the configured value a
+  moment later — a real transition, so the listener fires on every launch, and
+  deleting the workspace buys one good session. On a real four-subproject build
+  the fresh import wrote no subproject prefs at all, and a restart sixteen
+  minutes later wrote `VERSION(8.9)` for every subproject, with no setting
+  having been edited in between.
+
+  So the guard matters even for users who set this once and never touch it
+  again, which may be part of why it has gone unnoticed: on the clients most
+  people test with, you have to edit the setting to see it.
 - **Reloading the window does not heal it.** Buildship persists the
   configuration and nothing recomputes it for non-root projects, so the project
   stays broken until the jdtls workspace is deleted. This is the part that makes

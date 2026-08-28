@@ -1,0 +1,20 @@
+plugins { id 'java' }
+java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
+
+def libs = rootProject.file('processors/build/libs')
+def holder = new File(libs, 'holder.jar')
+def claimer = new File(libs, 'claimer.jar')
+def fillerJars = (1..6).collect { new File(libs, "filler${it}.jar") }
+
+// Declaration order is the order javac sees, and it is the order the Gradle
+// model hands to jdtls. Holder first is the working order — it mirrors the real
+// case, where Gradle puts protobuf-spi-impl ahead of mapstruct-processor.
+// -PclaimerFirst flips it, to show plain javac breaking on the same input.
+def processorPath = providers.gradleProperty('claimerFirst').isPresent()
+        ? [claimer, holder] + fillerJars
+        : [holder, claimer] + fillerJars
+
+dependencies {
+    annotationProcessor files(processorPath)
+}
+tasks.named('compileJava') { dependsOn ':processors:allJars' }
