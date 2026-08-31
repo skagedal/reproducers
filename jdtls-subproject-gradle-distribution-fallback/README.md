@@ -286,3 +286,11 @@ does — resolve the existing build via `GradleCore.getWorkspace().getBuild(proj
 and only mint a new root build for actual roots. Making
 `getGradleDistribution` walk up to the enclosing build root would fix the
 distribution half, but the empty `connection.project.dir` would remain.
+
+# Simon's issue
+
+(My words as opposed to Claude's.)
+
+## Changing `java.configuration.updateBuildConfiguration` re-imports Gradle subprojects as independent root builds
+
+I am using the Zed editor with eclipse-jdtls as my language server.
