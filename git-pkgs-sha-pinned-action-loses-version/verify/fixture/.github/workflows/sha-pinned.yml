@@ -1,0 +1,10 @@
+# The same action pinned by commit SHA, the way pinact, Dependabot and
+# Renovate all write it. The version lives in the trailing comment, and that
+# is the part git-pkgs drops.
+name: sha-pinned
+on: {push: {}}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0

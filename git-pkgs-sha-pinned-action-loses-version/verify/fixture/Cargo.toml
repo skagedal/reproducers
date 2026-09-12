@@ -1,0 +1,9 @@
+[package]
+name = "fixture"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Declared as a range here, resolved to an exact version in Cargo.lock.
+# That pair is the contrast the reproducer is built around.
+anyhow = "1"

@@ -1,0 +1,9 @@
+# An action pinned by tag. The tag is both what is written and what git-pkgs
+# records, so nothing is lost.
+name: tag-pinned
+on: {push: {}}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
