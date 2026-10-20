@@ -1,6 +1,6 @@
 # pinact: a line it fixed is annotated "pinact error"
 
-**Status: reproduced against pinact 5.0.0, not yet filed.**
+**Status: reproduced against pinact 5.0.0, filed as [suzuki-shunsuke/pinact#1790](https://github.com/suzuki-shunsuke/pinact/issues/1790).**
 
 Run in GitHub Actions, `pinact run` annotates every line it pins or updates.
 When it fixes the line the annotation is a `notice`, and pinact exits 0, but
@@ -30,7 +30,7 @@ pinact has no switch for the annotations. They are on whenever
 `GITHUB_ACTIONS=true`, and unsetting that also drops the "pinact min-age
 violation" errors, which are worth having.
 
-Proposed upstream issue text is at the bottom: [Issue draft](#issue-draft).
+The draft the issue was written from is at the bottom: [Issue draft](#issue-draft).
 
 ## How I hit this
 
