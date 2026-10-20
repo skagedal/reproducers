@@ -1,0 +1,6 @@
+on: workflow_dispatch
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v6.0.1
